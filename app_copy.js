@@ -65,9 +65,13 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 
     if (chosenXAxis === "poverty") {
         label = "Poverty:";
-    } else {
+    } else if {
         label = "Age";
     }
+    //else {
+    //label= "Obesity"
+    //}
+
 
 
     var toolTip = d3.tip()

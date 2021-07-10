@@ -1,6 +1,7 @@
-var svgWidth = 960;
-var svgHeight = 500;
-var margin = {
+var svgWidth = 960; // deefines horizontal lenght for rendering area
+var svgHeight = 500; // deefines vartical lenght for rendering area
+
+var margin = { //padding 
     top: 20,
     right: 40,
     bottom: 70,
@@ -9,7 +10,8 @@ var margin = {
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
-// Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
+// Create an SVG wrapper, append an SVG group that will hold our 
+//chart, and shift the latter by left and top margins.
 var svg = d3
     .select(".chart")
     .append("svg")
@@ -65,16 +67,17 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 
     if (chosenXAxis === "poverty") {
         label = "Poverty:";
-    } else {
+    } else if {
         label = "Age";
+    } else {
+        label = "Obesity"
     }
-
 
     var toolTip = d3.tip()
         .attr("class", "tooltip")
         .offset([80, -60])
         .html(function(d) {
-            return (`${d.rockband}<br>${label} ${d[chosenXAxis]}`);
+            return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
         });
 
     circlesGroup.call(toolTip);
@@ -90,29 +93,35 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     return circlesGroup;
 }
 
+// Retrieve data from the CSV file 
+//and execute everything below
+
 
 // Import Data
 d3.csv("data.csv").then(function(healthData, err) {
     if (err) throw err;
+
     // Step 1: Parse Data
     // ==============================
     healthData.forEach(function(data) {
         data.poverty = +data.poverty;
-        data.smokes = +data.smokes;
         data.age = +data.age;
         data.obesity = +data.obesity;
-        console.log(data.poverty);
+        data.smokes = +data.smokes;
+        //console.log(data.poverty);
     });
-    // Step 2: Create scale functions
+
+    // Step 2: Create Scales 
     // ==============================
+    //cXLinearScale function above csv import
     var xLinearScale = xScale(healthData, chosenXAxis);
 
-
+    //Create scale function Y axis(Linear)
     var yLinearScale = d3.scaleLinear()
         .domain([0, d3.max(healthData, d => d.smokes)])
         .range([height, 0]);
 
-    // Step 3: Create axis functions
+    // Step 3: Create initial axis functions
     // ==============================
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
@@ -125,29 +134,28 @@ d3.csv("data.csv").then(function(healthData, err) {
 
     // Step 4: Append Axes to the chart
     // ==============================
-
     chartGroup.append("g")
         .call(leftAxis);
 
-    // Step 5: Create Circles
+    // Step 5: Append Initial Circles
     // ==============================
     var circlesGroup = chartGroup.selectAll("circle")
         .data(healthData)
         .enter()
         .append("circle")
-        .attr("cx", d => xLinearScale(d[chosenXAxis]))
-        .attr("cy", d => yLinearScale(d.smokes))
-        //.attr("class", function(d) {
-        //  return "StateCircle" + d.abbr;
-
-    //})
-    .attr("r", "15")
+        .attr("cx", d => xLinearScale(d[chosenXAxis])) // X Axis
+        .attr("cy", d => yLinearScale(d.smokes)) // Y axis
+        .attr("r", 20)
         .attr("fill", "pink")
         .attr("opacity", ".5");
+    //.attr("class", function(d) {
+    //  return "StateCircle" + d.abbr;
+    //})
 
-    // --------Create group for two x-axis labels ----//
+    // --------Create group for 3 x-axis labels ----//
+    //-------------added (width/3) and (height + 60)-------------------------------------
     var labelsGroup = chartGroup.append("g")
-        .attr("transform", `translate(${width / 3}, ${height + 20})`);
+        .attr("transform", `translate(${width / 3}, ${height + 60})`);
 
     // X-1  Poverty Label 
     var povertyLabel = labelsGroup.append("text")
@@ -172,7 +180,7 @@ d3.csv("data.csv").then(function(healthData, err) {
         .classed("inactive", true)
         .text("Obesity (%)");
 
-    // append y axis
+    // append Y axis
     chartGroup.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left)
