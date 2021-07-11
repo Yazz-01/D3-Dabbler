@@ -1,29 +1,53 @@
+//-------------Stting Up the space for the chart--------------------
+// Setting up width, heigth and margins of the chart
 var svgWidth = 960; // deefines horizontal lenght for rendering area
 var svgHeight = 500; // deefines vartical lenght for rendering area
 
 var margin = { //padding 
     top: 20,
     right: 40,
-    bottom: 70,
+    bottom: 60,
     left: 100
 };
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our 
-//chart, and shift the latter by left and top margins.
+//chart, and shift the latter by left and top margins (CANVAS FOR THE GRAPH)
 var svg = d3
-    .select(".chart")
+    .select("#scatter")
     .append("svg")
     .attr("width", svgWidth)
-    .attr("height", svgHeight);
+    .attr("height", svgHeight)
+    .attr("class", "chart"); //closed the svg
+
+// Setting the Radius for each circle that will appear in the chart
+// If the browser changes below 530 pixeles, so the circle will be reduce from 10 to 5 pixeles
+var circRadius;
+
+function cirGet() {
+    if (width <= 530) {
+        circRadius = 5;
+    } else {
+        circRadius = 10;
+    }
+}
+cirGet();
+
 
 // Append an SVG group
-var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+var chartGroup = svg.append("g").attr("class", "xText");
+//.attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Initial Params
-var chosenXAxis = "poverty";
+// xText will allow us to select the group without excess of code    
+var xText = d3.select("xText");
+
+//Give xText a transform property that places it at the bottom of the chart
+xText.attr(
+    "transform",
+    "translate(" + ((width - labelArea) / 2 + laberArea) + ", " +
+    (height - margin - bottom) + ")"
+);
 
 // function used for updating x-scale var upon click on axis label
 function xScale(healthData, chosenXAxis) {
@@ -93,11 +117,9 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     return circlesGroup;
 }
 
-// Retrieve data from the CSV file 
-//and execute everything below
+// Retrieve data from the CSV file and execute everything below
 
-
-// Import Data
+// ----------Import Data-----------------
 d3.csv("data.csv").then(function(healthData, err) {
     if (err) throw err;
 
