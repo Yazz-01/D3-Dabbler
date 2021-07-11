@@ -88,7 +88,7 @@ yText
     .attr("y", 26)
     .attr("data-name", "age")
     .attr("data-axis", "y")
-    .attr("class", "sText active y")
+    .attr("class", "aText active y")
     .text("Population Age (years)");
 
 //--------------------IMPORTING CSV FILE------------------------
