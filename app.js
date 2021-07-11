@@ -124,7 +124,8 @@ function viz(healthData) {
         .attr("class", "d3-tip")
         .offset([40, -60])
         .html(function(d) {
-            // Grab the firt_name
+
+            // Grab the first_name
             var nameState = "<div>" + d.state + "</div>";
             // Get the "X" value and key value
             var theX = "<div>" + namX + ": " + parseFloat(d[namX]) + "</div>";
@@ -144,7 +145,22 @@ function viz(healthData) {
             return parseFloat(d[namX]) * 0.90;
         });
         //.max will grab the largest satum 
+        xMax = d3.max(healthData, function(d) {
+            return parseFloat(d[namY]) * 1.10;
+        });
     }
+    // Change the Min and Max for Y 
+    function yMinMax() {
+        // min will grab the smallest datum from the selected column
+        yMin = d3.min(healthData, function(d) {
+            return parseFloat(d[namY]) * 0.90;
+        });
+        //.max will grab the largest satum 
+        yMax = d3.max(healthData, function(d) {
+            return parseFloat(d[namY]) * 1.10;
+        });
+    }
+
 }
 
 var xLinearScale = xScale(healthData, chosenXAxis);
