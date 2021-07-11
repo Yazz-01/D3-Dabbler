@@ -49,7 +49,7 @@ var xText = d3.select("xText");
 xText.attr(
     "transform",
     "translate(" + ((width - labelArea) / 2 + labelArea) + ", " +
-    (height - margin - bottom) + ")"
+    (height - margin - txtBottom) + ")"
 );
 
 //Using xText to append the Text svg with coordinates specifying the space
