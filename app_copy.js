@@ -1,5 +1,5 @@
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 700;
 var svgAxisMargin = 0.2;
 var svgCirclesRadius = 10;
 var svgCirclesColor = "#88bdd3";
