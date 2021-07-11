@@ -161,64 +161,77 @@ function viz(healthData) {
         });
     }
 
+
+    // ===================Scatter Plot initialization==========================
+    // Adding the first placement of the data and axis to the scatter plot
+    // Instruction with d3 placing the circles in an area starting after
+    // the margin and word area 
+    xMinMax();
+    yMinMax();
+
+    var xLinearScale = d3
+        .scaleLinear()
+        .domain([xMin, xMax])
+        .range([margin + labelArea, width - margin]);
+
+    var yLinearScale = d3
+        .scaleLinear()
+        .domain([yMin, yMax])
+        .range([height - margin - labelArea, margin]);
+
+    // We pass the scale into the axis method creting the axis
+    var xAxis = d3.axisBottom(xLinearScale);
+    var yAxis = d3.axisLeft(yLinearScale);
+
+    // Appending the axis in group elements we call them 
+    //to include all the numbers, boarders and ticks
+    // The transform attribute specifies where to place the axes
+    svg
+        .append("g")
+        .call(xAxis)
+        .attr("class", "xAxis")
+        .attr("transform", "translate(0," + (height - margin - labelArea) + ")");
+    svg
+        .append("g")
+        .call(yAxis)
+        .attr("class", "yAxis")
+        .attr("transform", "translate(" + (margin + labelArea) + ", 0)")
+
+    // Grouping the circles and their labels.
+    var circlesGroup = svg.selectAll("g theCircles").data(healthData).enter();
+
+    // Step 5: Append the Circles for each row of datum
+    // ==============================
+    theCircles
+        .append("text")
+        // We return the abbreviation to .text, which makes the text the abbreviation.
+        .text(function(d) {
+            return d.abbr;
+        })
+        // Now place the text using our scale.
+        .attr("dx", function(d) {
+            return xLinearScale(d[namX]);
+        })
+        .attr("dy", function(d) {
+            // When the size of the text is the radius,
+            // adding a third of the radius to the height
+            // pushes it into the middle of the circle.
+            return yLinearScale(d[namY]) + circRadius / 2.5;
+        })
+        .attr("font-size", circRadius)
+        .attr("class", "stateText")
+        // Hover Rules
+        .on("mouseover", function(d) {
+            // Show the tooltip
+            toolTip.show(d);
+            // Highlight the state circle's border
+            d3.select("." + d.abbr).style("stroke", "#323232");
+        })
+        .on("mouseout", function(d) {
+            // Remove tooltip
+            toolTip.hide(d);
+            // Remove highlight
+            d3.select("." + d.abbr).style("stroke", "#e3e3e3");
+        });
+
 }
-// ===================Scatter Plot initialization==========================
-// Adding the first placement of the data and axis to the scatter plot
-// Instruction with d3 placing the circles in an area starting after
-// the margin and word area 
-xMinMax();
-yMinMax();
-
-var xLinearScale = d3
-    .scaleLinear()
-    .domain([xMin, xMax])
-    .range([margin + labelArea, width - margin]);
-
-var yLinearScale = d3
-    .scaleLinear()
-    .domain([yMin, yMax])
-    .range([height - margin - labelArea, margin]);
-
-// We pass the scale into the axis method creting the axis
-var xAxis = d3.axisBottom(xLinearScale);
-var yAxis = d3.axisLeft(yLinearScale);
-
-// Appending the axis in group elements we call them 
-//to include all the numbers, boarders and ticks
-// The transform attribute specifies where to place the axes
-svg
-    .append("g")
-    .call(xAxis)
-    .attr("class", "xAxis")
-    .attr("transform", "translate(0," + (height - margin - labelArea) + ")");
-svg
-    .append("g")
-    .call(yAxis)
-    .attr("class", "yAxis")
-    .attr("transform", "translate(" + (margin + labelArea) + ", 0)")
-
-// Grouping the circles and their labels.
-var circlesGroup = svg.selectAll("g theCircles").data(theData).enter();
-
-// Step 5: Append the Circles for each row of datum
-// ==============================
-circlesGroup
-    .append("circle")
-    // These attr's specify location, size and class.
-    .attr("cx", function(d) {
-        return xScale(d[curX]);
-    })
-    .attr("cy", function(d) {
-        return yScale(d[curY]);
-    })
-    .attr("r", circRadius)
-    .attr("class", function(d) {
-        return "stateCircle " + d.abbr;
-    })
-    // Hover rules (based on event listeners)
-    .on("mouseover", function(d) {
-        // Show the tooltip
-        toolTip.show(d, this);
-        // Highlight the state circle's border
-        d3.select(this).style("stroke", "#323232");
-    });
