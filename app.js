@@ -162,6 +162,18 @@ function viz(healthData) {
     }
 
 }
+// ===================Scatter Plot initialization==========================
+// Adding the first placement of the data and axis to the scatter plot
+// Instruction with d3 placing the circles in an area starting after
+// the margin and word area 
+var xLinearScale = d3
+    .scaleLinear()
+    .domain([xMin, xMax])
+    // Height is inverses
+
+
+
+
 
 var xLinearScale = xScale(healthData, chosenXAxis);
 
