@@ -65,37 +65,63 @@ var chosenYAxis = yAxes[0].option;
 
 
 // function used for updating x-scale var upon click on axis label
+// function used for updating x-scale var upon click on axis label
 function xScale(healthData, chosenXAxis) {
-    // create scales
-    var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d[chosenXAxis]) * 0.8,
-            d3.max(healthData, d => d[chosenXAxis]) * 1.2
+    // create xLinearScale
+    return d3.scaleLinear()
+        .domain([d3.min(healthData, d => d[chosenXAxis]) * (1 - svgAxisMargin),
+            d3.max(healthData, d => d[chosenXAxis]) * (1 + svgAxisMargin)
         ])
         .range([0, width]);
+}
 
-    return xLinearScale;
-
+// function used for updating y-scale var upon click on axis label
+function yScale(healthData, chosenYAxis) {
+    // create yLinearScale
+    return d3.scaleLinear()
+        .domain([0, d3.max(healthData, d => d[chosenYAxis]) * (1 + svgAxisMargin)])
+        .range([height, 0]);
 }
 
 // function used for updating xAxis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
+function renderXAxis(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
-
+    // use a transition to shift the axis
     xAxis.transition()
-        .duration(1000)
+        .duration(svgTransitionDuration)
         .call(bottomAxis);
-
+    //
     return xAxis;
 }
+
+// function used for updating yAxis var upon click on axis label
+function renderYAxis(newYScale, yAxis) {
+    var leftAxis = d3.axisLeft(newYScale);
+    // use a transition to shift the axis
+    yAxis.transition()
+        .duration(svgTransitionDuration)
+        .call(leftAxis);
+    //
+    return yAxis;
+}
+
 
 // function used for updating circles group with a transition to
 // new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 
-    circlesGroup.transition()
-        .duration(1000)
-        .attr("cx", d => newXScale(d[chosenXAxis]));
-
+    circlesGroup.selectAll("circle")
+        .transition()
+        .duration(svgTransitionDuration)
+        .attr("cx", d => newXScale(d[chosenXAxis]))
+        .attr("cy", d => newYScale(d[chosenYAxis]));
+    // use a transition to shift the circles' text
+    circlesGroup.selectAll("text")
+        .transition()
+        .duration(svgTransitionDuration)
+        .attr("x", d => newXScale(d[chosenXAxis]))
+        .attr("y", d => newYScale(d[chosenYAxis]));
+    //
     return circlesGroup;
 }
 
