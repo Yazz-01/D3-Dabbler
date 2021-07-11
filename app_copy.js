@@ -138,7 +138,9 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     for (var i = 0; i < yAxes.length; i++)
         if (chosenYAxis === yAxes[i].option)
             yLabel = yAxes[i].label;
+
         // Adding Tooltip
+
     var toolTip = d3.tip()
         .attr("class", "tooltip")
         .offset([110, 0])
@@ -147,31 +149,41 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
             formatToolTipText(xLabel, d[chosenXAxis]),
             formatToolTipText(yLabel, d[chosenYAxis])
         ].join("<br>"));
-
+    // Adding  a callback
     circlesGroup.call(toolTip);
 
-    circlesGroup.on("mouseover", function(data) {
-            toolTip.show(data);
-        })
-        // onmouseout event
-        .on("mouseout", function(data, index) {
-            toolTip.hide(data);
-        });
-
+    // Adding  the mouse over event
+    circlesGroup
+        .on("mouseover", (data, index, element) => toolTip.show(data, element[index]))
+        .on("mouseout", (data, index, element) => toolTip.hide(data, element[index]));
+    //
     return circlesGroup;
 }
 
+// Tooltip text according to the label
+function formatToolTipText(label, number) {
+    var line = `${label.split(" (")[0]}: `;
+    if (label.includes("%"))
+        line += `${number}%`;
+    else if (label.includes("USD"))
+        line += `$${number.toLocaleString()}`;
+    else line += number;
+    return line;
+}
 
-// Import Data
+
+// Importing Data
 d3.csv("data.csv").then(function(healthData, err) {
     if (err) throw err;
     // Step 1: Parse Data
     // ==============================
     healthData.forEach(function(data) {
+        data.id = +data.id;
         data.poverty = +data.poverty;
         data.smokes = +data.smokes;
         data.age = +data.age;
         data.obesity = +data.obesity;
+        data.income = +data.income;
         console.log(data.poverty);
     });
     // Step 2: Create scale functions
@@ -179,9 +191,9 @@ d3.csv("data.csv").then(function(healthData, err) {
     var xLinearScale = xScale(healthData, chosenXAxis);
 
 
-    var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(healthData, d => d.smokes)])
-        .range([height, 0]);
+    var yLinearScale = xScale(healthData, chosenYAxis);
+
+
 
     // Step 3: Create axis functions
     // ==============================
@@ -193,6 +205,11 @@ d3.csv("data.csv").then(function(healthData, err) {
         .classed("x-axis", true)
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
+
+    // append y axis
+    var yAxis = chartGroup.append("g")
+        .classed("y-axis", true)
+        .call(leftAxis);
 
     // Step 4: Append Axes to the chart
     // ==============================
