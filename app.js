@@ -109,7 +109,7 @@ function viz(healthData) {
     //  namX and namY define the data represented in each axis
     //  we define the names as they are deined in the healthData
     var namX = "poverty"
-    var namY = "healtcare";
+    var namY = "smokes";
 
     // Creating empty variables for the min and max values of x and y
     // This allow to alter the values in functions avoiding repetitive code
@@ -195,14 +195,43 @@ function viz(healthData) {
         .append("g")
         .call(yAxis)
         .attr("class", "yAxis")
-        .attr("transform", "translate(" + (margin + labelArea) + ", 0)")
+        .attr("transform", "translate(" + (margin + labelArea) + ", 0)");
 
     // Grouping the circles and their labels.
-    var circlesGroup = svg.selectAll("g theCircles").data(healthData).enter();
+    var circlesGroup = svg.selectAll("g circlesGroup").data(healthData).enter();
 
     // Step 5: Append the Circles for each row of datum
     // ==============================
-    theCircles
+    // We append the circles for each row of data (or each person, in this case).
+    circlesGroup
+        .append("circle")
+        // These attr's specify location, size and class.
+        .attr("cx", function(d) {
+            return xLinearScale(d[namX]);
+        })
+        .attr("cy", function(d) {
+            return yLinearScale(d[namY]);
+        })
+        .attr("r", circRadius)
+        .attr("class", function(d) {
+            return "stateCircle " + d.abbr;
+        })
+        // Hover rules (based on event listeners)
+        .on("mouseover", function(d) {
+            // Show the tooltip
+            toolTip.show(d, this);
+            // Highlight the state circle's border
+            d3.select(this).style("stroke", "#323232");
+        })
+        .on("mouseout", function(d) {
+            // Remove tooltip
+            toolTip.hide(d);
+            // Remove highlight
+            d3.select("." + d.abbr).style("stroke", "#e3e3e3");
+        });
+
+
+    circlesGroup
         .append("text")
         // We return the abbreviation to .text, which makes the text the abbreviation.
         .text(function(d) {
