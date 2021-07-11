@@ -15,19 +15,6 @@ var margin = {
 };
 
 
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
-
-// Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3
-    .select("#scatter")
-    .append("svg")
-    .attr("width", svgWidth)
-    .attr("height", svgHeight);
-
-// Append an SVG group
-var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // these are the helper objects to hold the data for each axis
 var xAxes = [{
@@ -62,6 +49,19 @@ var yAxes = [{
 var chosenXAxis = xAxes[0].option;
 var chosenYAxis = yAxes[0].option;
 
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
+
+// Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
+var svg = d3
+    .select("#scatter")
+    .append("svg")
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
+
+// Append an SVG group
+var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 
 // function used for updating x-scale var upon click on axis label
@@ -105,10 +105,19 @@ function renderYAxis(newYScale, yAxis) {
     return yAxis;
 }
 
+// function used for updating yAxis var upon click on axis label
+function renderYAxis(newYScale, yAxis) {
+    var leftAxis = d3.axisLeft(newYScale);
+    // use a transition to shift the axis
+    yAxis.transition()
+        .duration(svgTransitionDuration)
+        .call(leftAxis);
+    return yAxis;
+}
 
 // function used for updating circles group with a transition to
 // new circles
-function renderCircles(circlesGroup, newXScale, chosenXAxis) {
+function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
 
     circlesGroup.selectAll("circle")
         .transition()
@@ -133,6 +142,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     // Looping through X axes to grab the object that corresponds
     for (var i = 0; i < xAxes.length; i++)
         if (chosenXAxis === xAxes[i].option)
+
             xLabel = xAxes[i].label;
         // Looping through Y axes to grab the object that corresponds
     for (var i = 0; i < yAxes.length; i++)
@@ -149,6 +159,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
             formatToolTipText(xLabel, d[chosenXAxis]),
             formatToolTipText(yLabel, d[chosenYAxis])
         ].join("<br>"));
+
     // Adding  a callback
     circlesGroup.call(toolTip);
 
@@ -156,7 +167,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     circlesGroup
         .on("mouseover", (data, index, element) => toolTip.show(data, element[index]))
         .on("mouseout", (data, index, element) => toolTip.hide(data, element[index]));
-    //
+
     return circlesGroup;
 }
 
@@ -165,7 +176,7 @@ function formatToolTipText(label, number) {
     var line = `${label.split(" (")[0]}: `;
     if (label.includes("%"))
         line += `${number}%`;
-    else if (label.includes("USD"))
+    else if (label.includes("$USD"))
         line += `$${number.toLocaleString()}`;
     else line += number;
     return line;
@@ -184,7 +195,7 @@ d3.csv("data.csv").then(function(healthData, err) {
         data.age = +data.age;
         data.obesity = +data.obesity;
         data.income = +data.income;
-        console.log(data.poverty);
+        data.healthcare = +data.healthcare;
     });
     // Step 2: Create scale functions
     // ==============================
@@ -212,11 +223,10 @@ d3.csv("data.csv").then(function(healthData, err) {
         .call(leftAxis);
 
 
-
     // Step 4: Create Circles
     // ==============================
     var circlesGroup = chartGroup.selectAll("g>circle")
-        .data(censusData)
+        .data(healthData)
         .enter()
         .append("g");
     // append initial circles
@@ -239,8 +249,6 @@ d3.csv("data.csv").then(function(healthData, err) {
     // Create group for two x-axis labels
     var labelsGroup = chartGroup.append("g")
         .attr("transform", `translate(${width / 2}, ${height + 20})`);
-
-
 
     // create the objects to hold our labels 
     var xLabels = [];
@@ -289,8 +297,8 @@ d3.csv("data.csv").then(function(healthData, err) {
 
                 // functions here found above csv import
                 // updates x and y scale for new data
-                xLinearScale = xScale(censusData, chosenXAxis);
-                yLinearScale = yScale(censusData, chosenYAxis);
+                xLinearScale = xScale(healthData, chosenXAxis);
+                yLinearScale = yScale(healthData, chosenYAxis);
 
                 // updates x and y axis with transition
                 xAxis = renderXAxis(xLinearScale, xAxis);
