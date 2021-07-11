@@ -248,7 +248,7 @@ d3.csv("data.csv").then(function(healthData, err) {
 
     // Create group for two x-axis labels
     var labelsGroup = chartGroup.append("g")
-        .attr("transform", `translate(${width / 2}, ${height + 20})`);
+        .attr("transform", `translate(${width / 2}, ${height + 40})`);
 
     // create the objects to hold our labels 
     var xLabels = [];
