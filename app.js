@@ -5,7 +5,7 @@
 
 var width = parseInt(d3.select("#scatter").style("width")); // deefines horizontal lenght for rendering area
 // deefines vartical lenght for rendering area
-var height = witdth - width / 4;
+var height = width - width / 4;
 //Margin for the chart
 var margin = 20;
 // Space for the words 
