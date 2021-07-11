@@ -166,21 +166,20 @@ function viz(healthData) {
 // Adding the first placement of the data and axis to the scatter plot
 // Instruction with d3 placing the circles in an area starting after
 // the margin and word area 
+xMInMax();
+yMinMax();
+
 var xLinearScale = d3
     .scaleLinear()
     .domain([xMin, xMax])
-    // Height is inverses
+    .range([margin + labelArea, width - margin]);
+
+var yLinearScale = d3
+    .scaleLinear()
+    .domain([yMin, yMax])
+    .range([height - margin - labelArea, margin]);
 
 
-
-
-
-var xLinearScale = xScale(healthData, chosenXAxis);
-
-//Create scale function Y axis(Linear)
-var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(healthData, d => d.smokes)])
-    .range([height, 0]);
 
 // Step 3: Create initial axis functions
 // ==============================
