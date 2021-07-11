@@ -203,7 +203,7 @@ d3.csv("data.csv").then(function(healthData, err) {
     var xLinearScale = xScale(healthData, chosenXAxis);
 
 
-    var yLinearScale = xScale(healthData, chosenYAxis);
+    var yLinearScale = yScale(healthData, chosenYAxis);
 
 
 
