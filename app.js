@@ -112,7 +112,9 @@ d3.csv("data.csv").then(function(healthData, err) {
     // =====================================================
     // function "viz" manages the visual manipulation of all elements dependent on the data
     function viz(healthData) {
-        // 
+        // prefX and prefY will determine what data gets represented in eache axis
+
+
     }
 
     var xLinearScale = xScale(healthData, chosenXAxis);
