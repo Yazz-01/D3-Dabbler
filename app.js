@@ -198,141 +198,27 @@ svg
     .attr("transform", "translate(" + (margin + labelArea) + ", 0)")
 
 // Grouping the circles and their labels.
-var theCircles = svg.selectAll("g theCircles").data(theData).enter();
+var circlesGroup = svg.selectAll("g theCircles").data(theData).enter();
 
-// Step 3: Create initial axis functions
+// Step 5: Append the Circles for each row of datum
 // ==============================
-var bottomAxis = d3.axisBottom(xLinearScale);
-var leftAxis = d3.axisLeft(yLinearScale);
-
-// append x axis
-var xAxis = chartGroup.append("g")
-    .classed("x-axis", true)
-    .attr("transform", `translate(0, ${height})`)
-    .call(bottomAxis);
-
-// Step 4: Append Axes to the chart
-// ==============================
-chartGroup.append("g")
-    .call(leftAxis);
-
-// Step 5: Append Initial Circles
-// ==============================
-var circlesGroup = chartGroup.selectAll("circle")
-    .data(healthData)
-    .enter()
+circlesGroup
     .append("circle")
-    .attr("cx", d => xLinearScale(d[chosenXAxis])) // X Axis
-    .attr("cy", d => yLinearScale(d.smokes)) // Y axis
-    .attr("r", 20)
-    .attr("fill", "pink")
-    .attr("opacity", ".5");
-//.attr("class", function(d) {
-//  return "StateCircle" + d.abbr;
-//})
-
-// --------Create group for 3 x-axis labels ----//
-//-------------added (width/3) and (height + 60)-------------------------------------
-var labelsGroup = chartGroup.append("g")
-    .attr("transform", `translate(${width / 3}, ${height + 60})`);
-
-// X-1  Poverty Label 
-var povertyLabel = labelsGroup.append("text")
-    .attr("x", 0)
-    .attr("y", 20)
-    .attr("value", "poverty") // value to grab for event listener
-    .classed("active", true)
-    .text("Poverty (%)");
-// X-2  Age Label 
-var ageLabel = labelsGroup.append("text")
-    .attr("x", 0)
-    .attr("y", 40)
-    .attr("value", "age") // value to grab for event listener
-    .classed("inactive", true)
-    .text("Age (years)");
-
-// X-3  Obesity Label 
-var obesityLabel = labelsGroup.append("text")
-    .attr("x", 0)
-    .attr("y", 60)
-    .attr("value", "obesity") // value to grab for event listener
-    .classed("inactive", true)
-    .text("Obesity (%)");
-
-// append Y axis
-chartGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left)
-    .attr("x", 0 - (height / 2))
-    .attr("dy", "1em")
-    .classed("axis-text", true)
-    .text("Smokes (num)");
-
-// updateToolTip function above csv import
-var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
-
-
-// x axis labels event listener
-labelsGroup.selectAll("text")
-    .on("click", function() {
-        // get value of selection
-        var value = d3.select(this).attr("value");
-        if (value !== chosenXAxis) {
-
-            // replaces chosenXAxis with value
-            chosenXAxis = value;
-
-            //console.log(chosenXAxis)
-
-            // functions here found above csv import
-            // updates x scale for new data
-            xLinearScale = xScale(healthData, chosenXAxis);
-
-            // updates x axis with transition
-            xAxis = renderAxes(xLinearScale, xAxis);
-
-            // updates circles with new x values
-            circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
-
-            // updates tooltips with new info
-            circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
-
-            // changes classes to change bold text
-            if (chosenXAxis === "poverty") {
-                povertyLabel
-                    .classed("active", true)
-                    .classed("inactive", false);
-                ageLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                obesityLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-            } else if {
-                povertyLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                ageLabel
-                    .classed("active", true)
-                    .classed("inactive", false);
-                obesityLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-
-            } else {
-                povertyLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                ageLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                obesityLabel
-                    .classed("active", true)
-                    .classed("inactive", false);
-            }
-
-        }
+    // These attr's specify location, size and class.
+    .attr("cx", function(d) {
+        return xScale(d[curX]);
+    })
+    .attr("cy", function(d) {
+        return yScale(d[curY]);
+    })
+    .attr("r", circRadius)
+    .attr("class", function(d) {
+        return "stateCircle " + d.abbr;
+    })
+    // Hover rules (based on event listeners)
+    .on("mouseover", function(d) {
+        // Show the tooltip
+        toolTip.show(d, this);
+        // Highlight the state circle's border
+        d3.select(this).style("stroke", "#323232");
     });
-}).catch(function(error) {
-    console.log(error);
-});
