@@ -20,8 +20,8 @@ var txtLeft = 40;
 var svg = d3
     .select("#scatter")
     .append("svg")
-    .attr("width", svgWidth)
-    .attr("height", svgHeight)
+    .attr("width", width)
+    .attr("height", height)
     .attr("class", "chart"); //closed the svg
 
 // Setting the Radius for each circle that will appear in the chart
