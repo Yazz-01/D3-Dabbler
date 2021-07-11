@@ -179,7 +179,26 @@ var yLinearScale = d3
     .domain([yMin, yMax])
     .range([height - margin - labelArea, margin]);
 
+// We pass the scale into the axis method creting the axis
+var xAxis = d3.axisBottom(xLinearScale);
+var yAxis = d3.axisLeft(yLinearScale);
 
+// Appending the axis in group elements we call them 
+//to include all the numbers, boarders and ticks
+// The transform attribute specifies where to place the axes
+svg
+    .append("g")
+    .call(xAxis)
+    .attr("class", "xAxis")
+    .attr("transform", "translate(0," + (height - margin - labelArea) + ")");
+svg
+    .append("g")
+    .call(yAxis)
+    .attr("class", "yAxis")
+    .attr("transform", "translate(" + (margin + labelArea) + ", 0)")
+
+// Grouping the circles and their labels.
+var theCircles = svg.selectAll("g theCircles").data(theData).enter();
 
 // Step 3: Create initial axis functions
 // ==============================
