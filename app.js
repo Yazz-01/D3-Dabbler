@@ -166,7 +166,7 @@ function viz(healthData) {
 // Adding the first placement of the data and axis to the scatter plot
 // Instruction with d3 placing the circles in an area starting after
 // the margin and word area 
-xMInMax();
+xMinMax();
 yMinMax();
 
 var xLinearScale = d3
