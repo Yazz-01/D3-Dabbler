@@ -1,17 +1,26 @@
 var svgWidth = 960;
 var svgHeight = 500;
+var svgAxisMargin = 0.2;
+var svgCirclesRadius = 10;
+var svgCirclesColor = "#88bdd3";
+var svgAxesSpacing = 17;
+var svgTransitionDuration = 1000;
+
+
 var margin = {
     top: 20,
     right: 40,
-    bottom: 70,
+    bottom: 80,
     left: 100
 };
+
+
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
 var svg = d3
-    .select(".chart")
+    .select("#scatter")
     .append("svg")
     .attr("width", svgWidth)
     .attr("height", svgHeight);
@@ -20,8 +29,40 @@ var svg = d3
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// these are the helper objects to hold the data for each axis
+var xAxes = [{
+        option: "poverty",
+        label: "In Poverty (%)"
+    },
+    {
+        option: "age",
+        label: "Age (Median)"
+    },
+    {
+        option: "income",
+        label: "Household Income (USD Median)"
+    }
+];
+var yAxes = [{
+        option: "healthcare",
+        label: "Lacks Healthcare (%)"
+    },
+    {
+        option: "smokes",
+        label: "Smokes (%)"
+    },
+    {
+        option: "obesity",
+        label: "Obese (%)"
+    }
+];
+
+
 // Initial Params
-var chosenXAxis = "poverty";
+var chosenXAxis = xAxes[0].option;
+var chosenYAxis = yAxes[0].option;
+
+
 
 // function used for updating x-scale var upon click on axis label
 function xScale(healthData, chosenXAxis) {
