@@ -39,7 +39,7 @@ cirGet();
 
 //--------------------Bottom Axis--------------------------
 // Append an SVG group
-var chartGroup = svg.append("g").attr("class", "xText");
+svg.append("g").attr("class", "xText");
 //.attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // xText will allow us to select the group without excess of code    
@@ -166,6 +166,20 @@ function viz(healthData) {
     // Adding the first placement of the data and axis to the scatter plot
     // Instruction with d3 placing the circles in an area starting after
     // the margin and word area 
+    // b. change the min and max for y
+    function yMinMax() {
+        // min will grab the smallest datum from the selected column.
+        yMin = d3.min(healthData, function(d) {
+            return parseFloat(d[namY]) * 0.90;
+        });
+
+        // .max will grab the largest datum from the selected column.
+        yMax = d3.max(healthData, function(d) {
+            return parseFloat(d[namY]) * 1.10;
+        });
+    }
+
+
     xMinMax();
     yMinMax();
 
