@@ -46,9 +46,8 @@ var yAxes = [{
 
 
 // Initial Params
-// Initial Params
-var chosenXAxis = "poverty";
-var chosenYAxis = "obesity";
+var chosenXAxis = xAxes[0].option;
+var chosenYAxis = yAxes[0].option;
 
 
 var width = svgWidth - margin.left - margin.right;
