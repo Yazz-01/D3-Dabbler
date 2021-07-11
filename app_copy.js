@@ -126,27 +126,27 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 }
 
 // function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis, circlesGroup) {
+function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
-    var label;
-
-    if (chosenXAxis === "poverty") {
-        label = "Poverty:";
-    } else if {
-        label = "Age";
-    }
-    //else {
-    //label= "Obesity"
-    //}
-
-
-
+    var xlabel = "";
+    var ylabel = "";
+    // Looping through X axes to grab the object that corresponds
+    for (var i = 0; i < xAxes.length; i++)
+        if (chosenXAxis === xAxes[i].option)
+            xLabel = xAxes[i].label;
+        // Looping through Y axes to grab the object that corresponds
+    for (var i = 0; i < yAxes.length; i++)
+        if (chosenYAxis === yAxes[i].option)
+            yLabel = yAxes[i].label;
+        // Adding Tooltip
     var toolTip = d3.tip()
         .attr("class", "tooltip")
-        .offset([80, -60])
-        .html(function(d) {
-            return (`${d.rockband}<br>${label} ${d[chosenXAxis]}`);
-        });
+        .offset([110, 0])
+        .html(d => [
+            d.state,
+            formatToolTipText(xLabel, d[chosenXAxis]),
+            formatToolTipText(yLabel, d[chosenYAxis])
+        ].join("<br>"));
 
     circlesGroup.call(toolTip);
 
