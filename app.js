@@ -1,16 +1,19 @@
 //-------------Stting Up the space for the chart--------------------
 // Setting up width, heigth and margins of the chart
-var svgWidth = 960; // deefines horizontal lenght for rendering area
-var svgHeight = 500; // deefines vartical lenght for rendering area
 
-var margin = { //padding 
-    top: 20,
-    right: 40,
-    bottom: 60,
-    left: 100
-};
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
+// Setting up the sapace for the chart
+
+var width = parseInt(d3.select("#scatter").style("width")); // deefines horizontal lenght for rendering area
+// deefines vartical lenght for rendering area
+var height = witdth - width / 4;
+//Margin for the chart
+var margin = 20;
+// Space for the words 
+var labelArea = 120;
+
+//Padding for the text at the bottom and left axes
+var txtBottom = 40;
+var txtLeft = 40;
 
 // Create an SVG wrapper, append an SVG group that will hold our 
 //chart, and shift the latter by left and top margins (CANVAS FOR THE GRAPH)
@@ -34,7 +37,7 @@ function cirGet() {
 }
 cirGet();
 
-
+//--------------------Bottom Axis--------------------------
 // Append an SVG group
 var chartGroup = svg.append("g").attr("class", "xText");
 //.attr("transform", `translate(${margin.left}, ${margin.top})`);
@@ -45,81 +48,53 @@ var xText = d3.select("xText");
 //Give xText a transform property that places it at the bottom of the chart
 xText.attr(
     "transform",
-    "translate(" + ((width - labelArea) / 2 + laberArea) + ", " +
+    "translate(" + ((width - labelArea) / 2 + labelArea) + ", " +
     (height - margin - bottom) + ")"
 );
 
-// function used for updating x-scale var upon click on axis label
-function xScale(healthData, chosenXAxis) {
-    // create scales
-    var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d[chosenXAxis]) * 0.8,
-            d3.max(healthData, d => d[chosenXAxis]) * 1.2
-        ])
-        .range([0, width]);
+//Using xText to append the Text svg with coordinates specifying the space
+// the values - age
+xText
+    .append("text")
+    .attr("y", -26)
+    .attr("data-name", "poverty")
+    .attr("data-axis", "x")
+    .attr("class", "aText active x")
+    .text("Poverty (%)");
 
-    return xLinearScale;
+// -----------------Left Axis-----------------------------
+//---------------------------------------------------------
+// Defining the varibles to make the clearer the transform
+var leftTextX = margin + txtLeft;
+var leftTextY = (height + labelArea) / 2 - labelArea;
 
-}
+// Add a second label group, this time for the axis left of the chart
+svg.append("g").attr("class", "yText");
 
-// function used for updating xAxis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
-    var bottomAxis = d3.axisBottom(newXScale);
+// yText wil allows us to select the group without excess code
+var yText = d3.select(".yText");
 
-    xAxis.transition()
-        .duration(1000)
-        .call(bottomAxis);
+// Nesting the group´s transform attribute in a function to make changing it 
+//on window change an easy operation
 
-    return xAxis;
-}
+yText.attr(
+    "transform",
+    "translate(" + leftTextX + ", " + leftTextY + ")rotate(-90)"
+);
 
-// function used for updating circles group with a transition to
-// new circles
-function renderCircles(circlesGroup, newXScale, chosenXAxis) {
+// Smokes
+yText
+    .append("text")
+    .attr("y", 26)
+    .attr("data-name", "age")
+    .attr("data-axis", "y")
+    .attr("class", "sText active y")
+    .text("Population Age (years)");
 
-    circlesGroup.transition()
-        .duration(1000)
-        .attr("cx", d => newXScale(d[chosenXAxis]));
+//--------------------IMPORTING CSV FILE------------------------
+//---------------------------------------------------------------
 
-    return circlesGroup;
-}
-
-// function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis, circlesGroup) {
-
-    var label;
-
-    if (chosenXAxis === "poverty") {
-        label = "Poverty:";
-    } else if {
-        label = "Age";
-    } else {
-        label = "Obesity"
-    }
-
-    var toolTip = d3.tip()
-        .attr("class", "tooltip")
-        .offset([80, -60])
-        .html(function(d) {
-            return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
-        });
-
-    circlesGroup.call(toolTip);
-
-    circlesGroup.on("mouseover", function(data) {
-            toolTip.show(data);
-        })
-        // onmouseout event
-        .on("mouseout", function(data, index) {
-            toolTip.hide(data);
-        });
-
-    return circlesGroup;
-}
-
-// Retrieve data from the CSV file and execute everything below
-
-// ----------Import Data-----------------
+//Import our CSV using d3 
 d3.csv("data.csv").then(function(healthData, err) {
     if (err) throw err;
 
@@ -133,9 +108,13 @@ d3.csv("data.csv").then(function(healthData, err) {
         //console.log(data.poverty);
     });
 
-    // Step 2: Create Scales 
-    // ==============================
-    //cXLinearScale function above csv import
+    // Step 2: Create Scales for the Visualization
+    // =====================================================
+    // function "viz" manages the visual manipulation of all elements dependent on the data
+    function viz(healthData) {
+        // 
+    }
+
     var xLinearScale = xScale(healthData, chosenXAxis);
 
     //Create scale function Y axis(Linear)
