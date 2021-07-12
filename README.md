@@ -39,7 +39,7 @@ More demographics and more risk factors were included. Placed additional labels 
 ![7-animated-scatter](https://github.com/Yazz-01/D3-Dabbler/blob/main/assets/7-animated-scatter.gif)
 #### Incorporating d3-tip
 
-Resulted an interactive scatter plot, however, as infering approximate values for each circle makes impossible to determine the true value without adding another layer of data. Enter tooltips: developers can implement these in their D3 graphics to reveal a specific element's data when the user hovers their cursor over the element. Add tooltips to your circles and display each tooltip with the data that the user has selected. Use the `d3-tip.js` plugin developed by [Justin Palmer](https://github.com/Caged)—we've already included this plugin in your assignment directory.
+Resulted an interactive scatter plot, however, as infering approximate values for each circle makes impossible to determine the true value without adding another layer of data. Enter tooltips: developers can implement these in their D3 graphics to reveal a specific element's data when the user hovers their cursor over the element. Add tooltips to your circles and display each tooltip with the data that the user has selected. Use the `d3-tip.js` plugin developed by [Justin Palmer](https://github.com/Caged).
 
 ![8-tooltip](https://github.com/Yazz-01/D3-Dabbler/blob/main/assets/8-tooltip.gif)
 
