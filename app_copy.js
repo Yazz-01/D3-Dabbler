@@ -1,5 +1,5 @@
 var svgWidth = 960;
-var svgHeight = 700;
+var svgHeight = 500;
 var svgAxisMargin = 0.2;
 var svgCirclesRadius = 10;
 var svgCirclesColor = "#88bdd3";
@@ -10,7 +10,7 @@ var svgTransitionDuration = 1000;
 var margin = {
     top: 20,
     right: 40,
-    bottom: 80,
+    bottom: 100,
     left: 100
 };
 
@@ -202,10 +202,7 @@ d3.csv("data.csv").then(function(healthData, err) {
     // ==============================
     var xLinearScale = xScale(healthData, chosenXAxis);
 
-
     var yLinearScale = yScale(healthData, chosenYAxis);
-
-
 
     // Step 3: Create axis functions
     // ==============================
