@@ -36,8 +36,7 @@ Three axis were created and situated labels to the left and bottom of the chart.
 
 More demographics and more risk factors were included. Placed additional labels in the scatter plot and give them click events so that users can decide which data to display. Animate the transitions for your circles' locations as well as the range of the axes. This for three risk factors for each axis ... as more data more dynamics!  This was done by binding all of the CSV data to the circles. This let easily determine their x or y values when the user click the labels.
 
-![7-animated-scatter](https://github.com/Yazz-01/D3-Dabbler/blob/main/assets/7-animated-scatter.giff)
-
+![7-animated-scatter](https://github.com/Yazz-01/D3-Dabbler/blob/main/assets/7-animated-scatter.gif)
 #### Incorporating d3-tip
 
 Resulted an interactive scatter plot, however, as infering approximate values for each circle makes impossible to determine the true value without adding another layer of data. Enter tooltips: developers can implement these in their D3 graphics to reveal a specific element's data when the user hovers their cursor over the element. Add tooltips to your circles and display each tooltip with the data that the user has selected. Use the `d3-tip.js` plugin developed by [Justin Palmer](https://github.com/Caged)—we've already included this plugin in your assignment directory.
