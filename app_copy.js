@@ -14,8 +14,6 @@ var margin = {
     left: 100
 };
 
-
-
 // these are the helper objects to hold the data for each axis
 var xAxes = [{
         option: "poverty",
