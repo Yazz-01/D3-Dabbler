@@ -1,12 +1,11 @@
 # D3-Dabbler Interactive Analysis
 D3 Project creating interactive and challenging visualizations for the analysis of USA demographics such as poverty, heathcare, income and smoking. Check it out in this link  https://yazz-01.github.io/D3-Dabbler/ and to know how I did it continue reading.
 
-* Note: You'll need to use `python -m http.server` to run the visualization. This will host the page at `localhost:8000` in your web browser.
-
-
 # D3 - Data Journalism and D3
 
 ![Newsroom](https://media.giphy.com/media/v2xIous7mnEYg/giphy.gif)
+* Note: You'll need to use `python -m http.server` to run the visualization. This will host the page at `localhost:8000` in your web browser.
+
 
 ## Data Sources - Published evidence to analyse
 
